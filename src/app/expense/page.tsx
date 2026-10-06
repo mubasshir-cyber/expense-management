@@ -23,15 +23,15 @@ export default function ExpensePage() {
   return (
     <div className="space-y-6 animate-fade-in pb-16">
       {/* Page Header Banner Bento */}
-      <div className="bento-card p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-rose-50/40">
+      <div className="bento-card p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-rose-50/40">
         <div className="absolute top-0 right-0 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold font-mono uppercase tracking-wider shadow-sm">
+        <div className="space-y-1.5 sm:space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-[11px] sm:text-xs font-bold font-mono uppercase tracking-wider shadow-sm">
             <TrendingDown className="w-3.5 h-3.5" />
             <span>DEBIT &amp; EXPENDITURE AUDIT</span>
           </div>
-          <h1 className="typo-hero text-3xl sm:text-4xl text-slate-900 tracking-tight">
+          <h1 className="typo-hero text-2xl sm:text-4xl text-slate-900 tracking-tight">
             EXPENSE CONTROL CENTER
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 max-w-xl font-medium">
@@ -42,7 +42,7 @@ export default function ExpensePage() {
         <button
           type="button"
           onClick={() => openTransactionModal('Expense')}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-sm font-bold shadow-lg shadow-rose-600/25 transition-all active:scale-95 typo-label shrink-0"
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-rose-600/25 transition-all active:scale-95 typo-label shrink-0 text-center"
         >
           <Plus className="w-4 h-4" />
           <span>New Expense Entry</span>
@@ -50,7 +50,7 @@ export default function ExpensePage() {
       </div>
 
       {/* Expense KPI Bento Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <StatCard
           title="Total Outflow"
           tag="EXPENSES"

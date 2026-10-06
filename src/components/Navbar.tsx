@@ -67,26 +67,26 @@ export const Navbar = () => {
       )}
 
       {/* Main Bright Bento Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-2xl shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-2xl shadow-sm">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             
             {/* Logo and Brand */}
-            <div className="flex items-center gap-8">
-              <Link href="/" className="flex items-center gap-3.5 group">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-all duration-300 border border-blue-400/30">
-                  <span className="text-white font-black text-xl tracking-wider font-mono">SBI</span>
+            <div className="flex items-center gap-3 sm:gap-8">
+              <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 group">
+                <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 flex items-center justify-center shadow-md sm:shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-all duration-300 border border-blue-400/30 shrink-0">
+                  <span className="text-white font-black text-base sm:text-xl tracking-wider font-mono">SBI</span>
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="typo-hero font-extrabold text-slate-900 text-base tracking-tight group-hover:text-blue-600 transition-colors">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <span className="typo-hero font-extrabold text-slate-900 text-sm sm:text-base tracking-tight group-hover:text-blue-600 transition-colors">
                       EXPENSE OS
                     </span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                    <span className="hidden sm:inline-block text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
                       BENTO BRIGHT
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-500 font-mono tracking-tight">Google Sheets Connected</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-tight">Google Sheets Synced</p>
                 </div>
               </Link>
 
@@ -113,7 +113,7 @@ export const Navbar = () => {
               </nav>
             </div>
 
-            {/* Right Action Tools */}
+            {/* Right Action Tools for Desktop */}
             <div className="hidden sm:flex items-center gap-3">
               {/* Sheet Connection Status Pill */}
               <button
@@ -199,72 +199,44 @@ export const Navbar = () => {
               </div>
             </div>
 
-            {/* Mobile menu button */}
-            <div className="flex items-center gap-2 md:hidden">
+            {/* Mobile Header Quick Actions */}
+            <div className="flex items-center gap-1.5 sm:hidden">
+              {/* Sync Pill */}
               <button
-                onClick={() => openTransactionModal('Expense')}
-                className="p-2.5 rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                onClick={refreshData}
+                disabled={isSyncing}
+                className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors active:scale-95"
+                title="Sync Google Sheet"
               >
-                <Plus className="w-4 h-4" />
+                <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin text-blue-600' : ''}`} />
               </button>
+
+              {/* Sheet Connection Pill */}
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2.5 rounded-xl text-slate-600 hover:text-slate-900 bg-white border border-slate-200 shadow-sm"
+                onClick={openSettingsModal}
+                className={`p-2 rounded-xl border flex items-center gap-1.5 text-[11px] font-mono font-bold transition-all active:scale-95 ${
+                  isConnected
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                    : 'bg-amber-50 text-amber-800 border-amber-300'
+                }`}
+                title="Settings & Sheet Connection"
               >
-                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                <Sheet className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Settings button */}
+              <button
+                onClick={openSettingsModal}
+                className="p-2 rounded-xl text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 transition-colors active:scale-95"
+                title="Settings"
+              >
+                <Settings className="w-4 h-4" />
               </button>
             </div>
 
           </div>
         </div>
-
-        {/* Mobile Navigation Drawer */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white/95 px-4 pt-3 pb-5 space-y-2 shadow-lg">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-bold ${
-                    isActive
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{link.name}</span>
-                </Link>
-              );
-            })}
-
-            <div className="pt-3 border-t border-slate-200 flex items-center justify-between">
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  openSettingsModal();
-                }}
-                className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 font-mono uppercase"
-              >
-                <Settings className="w-4 h-4" />
-                <span>Sheet Settings</span>
-              </button>
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  refreshData();
-                }}
-                className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 font-mono uppercase"
-              >
-                <RefreshCw className="w-4 h-4" />
-                <span>Sync Now</span>
-              </button>
-            </div>
-          </div>
-        )}
       </header>
     </>
   );

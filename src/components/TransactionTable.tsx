@@ -162,9 +162,9 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
         </div>
       </div>
 
-      {/* Filter Bar (if not hidden) */}
+      {/* Filter Bar */}
       {!hideFilters && (
-        <div className="p-4 border-b border-slate-200/80 bg-slate-50/80 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="p-3 sm:p-4 border-b border-slate-200/80 bg-slate-50/80 space-y-3">
           {/* Search Box */}
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -173,63 +173,66 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
               placeholder="Search category, note, amount..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm"
+              className="w-full pl-10 pr-3 py-2.5 sm:py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             />
           </div>
 
-          {/* Type Filter */}
-          {initialTypeFilter === 'All' && (
+          {/* Filter Selects Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {/* Type Filter */}
+            {initialTypeFilter === 'All' && (
+              <div className="relative col-span-2 sm:col-span-1">
+                <select
+                  value={typeFilter}
+                  onChange={(e) => setTypeFilter(e.target.value as TransactionType | 'All')}
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                >
+                  <option value="All">All Types (Credit &amp; Debit)</option>
+                  <option value="Expense">Expenses Only</option>
+                  <option value="Credit">Credits Only</option>
+                </select>
+              </div>
+            )}
+
+            {/* Category Filter */}
             <div className="relative">
               <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value as TransactionType | 'All')}
-                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               >
-                <option value="All">All Types (Credit & Expense)</option>
-                <option value="Expense">Expenses Only</option>
-                <option value="Credit">Credits Only</option>
+                <option value="All">All Categories</option>
+                {availableCategories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
               </select>
             </div>
-          )}
 
-          {/* Category Filter */}
-          <div className="relative">
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm"
-            >
-              <option value="All">All Categories</option>
-              {availableCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Account Filter */}
-          <div className="relative">
-            <select
-              value={accountFilter}
-              onChange={(e) => setAccountFilter(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm"
-            >
-              <option value="All">All Accounts</option>
-              {accounts.map((acc) => (
-                <option key={acc.name} value={acc.name}>
-                  {acc.name}
-                </option>
-              ))}
-            </select>
+            {/* Account Filter */}
+            <div className="relative">
+              <select
+                value={accountFilter}
+                onChange={(e) => setAccountFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              >
+                <option value="All">All Accounts</option>
+                {accounts.map((acc) => (
+                  <option key={acc.name} value={acc.name}>
+                    {acc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Table Content */}
-      <div className="overflow-x-auto">
+      {/* Content Area */}
+      <div>
         {filteredTransactions.length === 0 ? (
-          <div className="py-16 px-4 text-center">
+          <div className="py-12 sm:py-16 px-4 text-center">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
               <FileSpreadsheet className="w-6 h-6" />
             </div>
@@ -241,117 +244,187 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
             </p>
             <button
               onClick={() => openTransactionModal(initialTypeFilter === 'Expense' ? 'Expense' : initialTypeFilter === 'Credit' ? 'Credit' : 'Expense')}
-              className="mt-4 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white transition-colors uppercase font-mono shadow-md shadow-blue-600/20"
+              className="mt-4 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white transition-colors uppercase font-mono shadow-md shadow-blue-600/20"
             >
               Add First Transaction
             </button>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-slate-200 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 bg-slate-50">
-                <th className="py-3.5 px-5">
-                  <button
-                    onClick={() => {
-                      if (sortBy === 'date') setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-                      else {
-                        setSortBy('date');
-                        setSortOrder('desc');
-                      }
-                    }}
-                    className="flex items-center gap-1 hover:text-slate-900"
-                  >
-                    <span>Date</span>
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="py-3.5 px-5">Category &amp; Note</th>
-                <th className="py-3.5 px-5">Account Channel</th>
-                <th className="py-3.5 px-5 text-right">
-                  <button
-                    onClick={() => {
-                      if (sortBy === 'amount') setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-                      else {
-                        setSortBy('amount');
-                        setSortOrder('desc');
-                      }
-                    }}
-                    className="flex items-center gap-1 ml-auto hover:text-slate-900"
-                  >
-                    <span>Amount (INR)</span>
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="py-3.5 px-5 text-center w-16">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-xs font-medium">
+          <>
+            {/* 1. Mobile Feed View (visible on < md screens) */}
+            <div className="md:hidden divide-y divide-slate-100">
               {filteredTransactions.map((t) => {
                 const isExpense = t.type === 'Expense';
                 return (
-                  <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
-                    {/* Date */}
-                    <td className="py-3.5 px-5 whitespace-nowrap text-slate-600 font-mono">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span>{formatDate(t.date)}</span>
-                      </div>
-                    </td>
-
-                    {/* Category & Note */}
-                    <td className="py-3.5 px-5">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`p-2 rounded-xl shrink-0 ${
-                            isExpense
-                              ? 'bg-rose-50 text-rose-600 border border-rose-200'
-                              : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                          }`}
-                        >
-                          {isExpense ? <TrendingDown className="w-3.5 h-3.5" /> : <TrendingUp className="w-3.5 h-3.5" />}
-                        </div>
-                        <div>
-                          <p className="font-bold text-slate-900 text-xs sm:text-sm">{t.category}</p>
-                          {t.note && <p className="text-[11px] text-slate-500 truncate max-w-sm">{t.note}</p>}
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Account */}
-                    <td className="py-3.5 px-5 whitespace-nowrap">
-                      <span className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-mono text-[11px] font-semibold">
-                        {t.account}
-                      </span>
-                    </td>
-
-                    {/* Amount */}
-                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                      <span
-                        className={`typo-num text-sm sm:text-base ${
-                          isExpense ? 'text-rose-600' : 'text-emerald-600'
+                  <div
+                    key={t.id}
+                    className="p-4 flex items-center justify-between gap-3 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                  >
+                    {/* Left: Icon & Description */}
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div
+                        className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
+                          isExpense
+                            ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                            : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
                         }`}
                       >
-                        {isExpense ? '-' : '+'}
-                        {formatCurrency(t.amount)}
-                      </span>
-                    </td>
+                        {isExpense ? <TrendingDown className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold text-slate-900 text-sm truncate">{t.category}</p>
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+                            {t.account}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5 font-medium truncate">
+                          <span>{formatDate(t.date)}</span>
+                          {t.note && (
+                            <>
+                              <span>•</span>
+                              <span className="truncate text-slate-600">{t.note}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
 
-                    {/* Delete Action */}
-                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
+                    {/* Right: Amount & Delete Button */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="text-right">
+                        <span
+                          className={`typo-num text-sm sm:text-base font-bold ${
+                            isExpense ? 'text-rose-600' : 'text-emerald-600'
+                          }`}
+                        >
+                          {isExpense ? '-' : '+'}
+                          {formatCurrency(t.amount)}
+                        </span>
+                      </div>
                       <button
                         type="button"
                         onClick={() => handleDelete(t.id, t.note || t.category)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors opacity-60 group-hover:opacity-100"
+                        className="p-2 rounded-xl text-slate-400 hover:text-rose-600 active:bg-rose-50 transition-colors"
                         title="Delete record"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+
+            {/* 2. Desktop Table View (visible on >= md screens) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 bg-slate-50">
+                    <th className="py-3.5 px-5">
+                      <button
+                        onClick={() => {
+                          if (sortBy === 'date') setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                          else {
+                            setSortBy('date');
+                            setSortOrder('desc');
+                          }
+                        }}
+                        className="flex items-center gap-1 hover:text-slate-900"
+                      >
+                        <span>Date</span>
+                        <ArrowUpDown className="w-3 h-3" />
+                      </button>
+                    </th>
+                    <th className="py-3.5 px-5">Category &amp; Note</th>
+                    <th className="py-3.5 px-5">Account Channel</th>
+                    <th className="py-3.5 px-5 text-right">
+                      <button
+                        onClick={() => {
+                          if (sortBy === 'amount') setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                          else {
+                            setSortBy('amount');
+                            setSortOrder('desc');
+                          }
+                        }}
+                        className="flex items-center gap-1 ml-auto hover:text-slate-900"
+                      >
+                        <span>Amount (INR)</span>
+                        <ArrowUpDown className="w-3 h-3" />
+                      </button>
+                    </th>
+                    <th className="py-3.5 px-5 text-center w-16">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs font-medium">
+                  {filteredTransactions.map((t) => {
+                    const isExpense = t.type === 'Expense';
+                    return (
+                      <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
+                        {/* Date */}
+                        <td className="py-3.5 px-5 whitespace-nowrap text-slate-600 font-mono">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <span>{formatDate(t.date)}</span>
+                          </div>
+                        </td>
+
+                        {/* Category & Note */}
+                        <td className="py-3.5 px-5">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`p-2 rounded-xl shrink-0 ${
+                                isExpense
+                                  ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                                  : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                              }`}
+                            >
+                              {isExpense ? <TrendingDown className="w-3.5 h-3.5" /> : <TrendingUp className="w-3.5 h-3.5" />}
+                            </div>
+                            <div>
+                              <p className="font-bold text-slate-900 text-xs sm:text-sm">{t.category}</p>
+                              {t.note && <p className="text-[11px] text-slate-500 truncate max-w-sm">{t.note}</p>}
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Account */}
+                        <td className="py-3.5 px-5 whitespace-nowrap">
+                          <span className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-mono text-[11px] font-semibold">
+                            {t.account}
+                          </span>
+                        </td>
+
+                        {/* Amount */}
+                        <td className="py-3.5 px-5 text-right whitespace-nowrap">
+                          <span
+                            className={`typo-num text-sm sm:text-base ${
+                              isExpense ? 'text-rose-600' : 'text-emerald-600'
+                            }`}
+                          >
+                            {isExpense ? '-' : '+'}
+                            {formatCurrency(t.amount)}
+                          </span>
+                        </td>
+
+                        {/* Delete Action */}
+                        <td className="py-3.5 px-5 text-center whitespace-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(t.id, t.note || t.category)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors opacity-60 group-hover:opacity-100"
+                            title="Delete record"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

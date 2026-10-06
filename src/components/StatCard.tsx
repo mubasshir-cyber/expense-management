@@ -66,7 +66,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   }[variant];
 
   return (
-    <div className={`${variantStyles.cardClass} p-6 relative overflow-hidden group flex flex-col justify-between`}>
+    <div className={`${variantStyles.cardClass} p-4 sm:p-6 relative overflow-hidden group flex flex-col justify-between`}>
       {/* Top Background Glow */}
       <div
         className={`absolute -top-16 -right-16 w-36 h-36 bg-gradient-to-bl ${variantStyles.accentGlow} rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500`}
@@ -74,25 +74,25 @@ export const StatCard: React.FC<StatCardProps> = ({
 
       {/* Card Header */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="typo-label text-[11px] text-slate-500 tracking-wider">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="typo-label text-[10px] sm:text-[11px] text-slate-500 tracking-wider">
               {title}
             </span>
             {tag && (
-              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+              <span className="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
                 {tag}
               </span>
             )}
           </div>
-          <div className={`p-2.5 rounded-xl ${variantStyles.iconBox}`}>
+          <div className={`p-1.5 sm:p-2.5 rounded-xl ${variantStyles.iconBox}`}>
             {icon}
           </div>
         </div>
 
         {/* Large Bold Typography Value */}
         <div className="space-y-1">
-          <div className="typo-num text-3xl sm:text-4xl text-slate-900 tracking-tight leading-none">
+          <div className="typo-num text-xl sm:text-3xl text-slate-900 tracking-tight leading-none">
             {formatCurrency(amount)}
           </div>
         </div>

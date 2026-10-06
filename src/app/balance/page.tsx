@@ -190,25 +190,90 @@ export default function BalancePage() {
         </div>
       </div>
 
-      {/* Payment Modes Reconciliation Ledger Bento Table */}
+      {/* Payment Modes Reconciliation Ledger Bento */}
       <div className="bento-card overflow-hidden space-y-4">
-        <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="typo-label text-xs text-slate-800">PAYMENT MODES AUDIT &amp; RECONCILIATION</h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              Initial Baseline + Total Inflow - Total Outflow = Current Available Balance
+              Opening Balance + Inflow - Outflow = Available Balance
             </p>
           </div>
           <button
             type="button"
             onClick={() => openAccountModal()}
-            className="text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors uppercase"
+            className="text-xs font-mono font-bold px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors uppercase self-start sm:self-auto"
           >
             + New Channel
           </button>
         </div>
 
-        <div className="overflow-x-auto p-2">
+        {/* 1. Mobile Cards View for Payment Modes Reconciliation */}
+        <div className="md:hidden divide-y divide-slate-100 p-2">
+          {accountStats.map((acc) => (
+            <div key={acc.name} className="p-3.5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-slate-100 text-slate-700 border border-slate-200">
+                    {acc.type === 'Bank' && <Building2 className="w-4 h-4 text-blue-600" />}
+                    {acc.type === 'Credit Card' && <CreditCard className="w-4 h-4 text-rose-600" />}
+                    {acc.type === 'Wallet' && <Smartphone className="w-4 h-4 text-emerald-600" />}
+                    {acc.type === 'Cash' && <Banknote className="w-4 h-4 text-amber-600" />}
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-900 text-sm">{acc.name}</p>
+                    <p className="text-[11px] text-slate-500 font-mono">{acc.accountNumber || 'Primary Mode'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => openAccountModal(acc)}
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 bg-slate-50 border border-slate-200"
+                    title="Edit Mode"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(`Delete payment mode "${acc.name}"?`)) {
+                        deleteAccount(acc.name);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 bg-slate-50 border border-slate-200"
+                    title="Delete Mode"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Stat breakdown grid */}
+              <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100 font-mono">
+                <div>
+                  <span className="text-[10px] text-slate-400 block">OPENING</span>
+                  <span className="text-slate-700 font-bold">{formatCurrency(acc.initialBalance || 0)}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">CURRENT</span>
+                  <span className="text-slate-900 font-bold text-sm">{formatCurrency(acc.currentBalance)}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-emerald-600 block">INFLOW (+)</span>
+                  <span className="text-emerald-700 font-bold">+{formatCurrency(acc.totalCredits)}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-rose-600 block">OUTFLOW (-)</span>
+                  <span className="text-rose-700 font-bold">-{formatCurrency(acc.totalDebits)}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 2. Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto p-2">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-200 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 bg-slate-50">

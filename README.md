@@ -4,13 +4,16 @@
 
 ### **Bright Bento Financial Ledger — Powered by Google Sheets**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://expense-managmentt.netlify.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
 [![Google Sheets](https://img.shields.io/badge/Google_Sheets-API-34A853?style=for-the-badge&logo=google-sheets)](https://developers.google.com/apps-script)
 
-> A zero-cost, self-hosted personal finance dashboard that uses **Google Sheets as a database** via **Google Apps Script**. Track expenses, credits, account balances, and payment modes — all synced live to your spreadsheet.
+🔗 **Live App:** [https://expense-managmentt.netlify.app/](https://expense-managmentt.netlify.app/)
+
+> A zero-cost, self-hosted personal finance dashboard that uses **Google Sheets as a database** via **Google Apps Script**. Track expenses, credits, account balances, and payment modes — fully optimized for mobile and desktop with real-time spreadsheet cloud sync.
 
 </div>
 
@@ -20,6 +23,7 @@
 
 | Feature | Description |
 |---------|-------------|
+| 📱 **Mobile-First App UI** | Floating bottom navigation bar, quick '+' FAB button, native card feeds & bottom sheet modals |
 | 📊 **Dashboard** | Bento-grid overview with net balance, income, expenses & savings rate |
 | 💸 **Expense Tracking** | Log debit entries with categories, payment modes & notes |
 | 💰 **Credit Tracking** | Record income, salary, freelance & other credit entries |

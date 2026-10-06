@@ -51,37 +51,37 @@ export default function DashboardPage() {
       {/* ========================================================================= */}
       {/* BENTO ROW 1: Hero Control Center & Highlight Net Balance                  */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         
         {/* Main Hero Bento Card (Col span 8) */}
-        <div className="lg:col-span-8 bento-card p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-blue-50/40 border-slate-200">
+        <div className="lg:col-span-8 bento-card p-5 sm:p-8 flex flex-col justify-between relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-blue-50/40 border-slate-200">
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div>
             {/* Top Pill / Badge */}
-            <div className="flex flex-wrap items-center gap-2.5 mb-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold font-mono uppercase tracking-wider shadow-sm">
+            <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-[11px] sm:text-xs font-bold font-mono uppercase tracking-wider shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>SBI Financial OS v2.0</span>
+                <span>SBI Financial OS</span>
               </span>
 
               <span
                 onClick={openSettingsModal}
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-mono uppercase tracking-wider cursor-pointer border transition-all shadow-sm ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold font-mono uppercase tracking-wider cursor-pointer border transition-all shadow-sm ${
                   isConnected
                     ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
                     : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
                 }`}
               >
                 <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                <span>{isConnected ? 'Sheets Database Live' : 'Connect Google Sheet'}</span>
+                <span>{isConnected ? 'Sheets Live' : 'Connect Sheet'}</span>
               </span>
             </div>
 
             {/* Bold Headline */}
-            <h1 className="typo-hero text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-none mb-3">
+            <h1 className="typo-hero text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-tight sm:leading-none mb-2 sm:mb-3">
               INTELLIGENT EXPENSE <br className="hidden sm:inline" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-emerald-600">
                 &amp; CASH FLOW LEDGER
@@ -94,31 +94,31 @@ export default function DashboardPage() {
           </div>
 
           {/* Action Dock */}
-          <div className="mt-8 pt-6 border-t border-slate-200 flex flex-wrap items-center gap-3">
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-200 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => openTransactionModal('Expense')}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-rose-600/20 transition-all active:scale-95 typo-label"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-rose-600/20 transition-all active:scale-95 typo-label text-center"
             >
-              <TrendingDown className="w-4 h-4" />
+              <TrendingDown className="w-4 h-4 shrink-0" />
               <span>Log Expense</span>
             </button>
 
             <button
               type="button"
               onClick={() => openTransactionModal('Credit')}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/20 transition-all active:scale-95 typo-label"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/20 transition-all active:scale-95 typo-label text-center"
             >
-              <TrendingUp className="w-4 h-4" />
+              <TrendingUp className="w-4 h-4 shrink-0" />
               <span>Add Credit</span>
             </button>
 
             <button
               type="button"
               onClick={() => openTransactionModal('Transfer')}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs sm:text-sm font-bold shadow-sm transition-all active:scale-95 typo-label"
+              className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs sm:text-sm font-bold shadow-sm transition-all active:scale-95 typo-label text-center"
             >
-              <ArrowRightLeft className="w-4 h-4 text-blue-600" />
+              <ArrowRightLeft className="w-4 h-4 text-blue-600 shrink-0" />
               <span>Transfer Funds</span>
             </button>
 
@@ -134,33 +134,33 @@ export default function DashboardPage() {
         </div>
 
         {/* Highlight Net Balance Bento Card (Col span 4) */}
-        <div className="lg:col-span-4 bento-card-glow-blue p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+        <div className="lg:col-span-4 bento-card-glow-blue p-5 sm:p-8 flex flex-col justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
 
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="typo-label text-xs text-blue-100">TOTAL NET BALANCE</span>
-              <div className="p-2.5 rounded-xl bg-white/20 text-white border border-white/30 backdrop-blur-md">
-                <Wallet className="w-5 h-5" />
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <span className="typo-label text-[11px] sm:text-xs text-blue-100">TOTAL NET BALANCE</span>
+              <div className="p-2 sm:p-2.5 rounded-xl bg-white/20 text-white border border-white/30 backdrop-blur-md">
+                <Wallet className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </div>
 
-            <div className="typo-num text-4xl sm:text-5xl text-white tracking-tight leading-none">
+            <div className="typo-num text-3xl sm:text-5xl text-white tracking-tight leading-none">
               {formatCurrency(netBalance)}
             </div>
 
-            <p className="text-xs text-blue-100/80 mt-2 font-medium">
-              Net position across {accounts.length} active payment channels &amp; accounts
+            <p className="text-[11px] sm:text-xs text-blue-100/80 mt-2 font-medium">
+              Net position across {accounts.length} active payment channels
             </p>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/20 space-y-2">
+          <div className="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-white/20 space-y-1.5 sm:space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-blue-100/90 font-medium">Total Credit Inflow</span>
+              <span className="text-blue-100/90 font-medium">Total Inflow</span>
               <span className="typo-num font-bold text-emerald-300">+{formatCurrency(totalCredit)}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-blue-100/90 font-medium">Total Expense Outflow</span>
+              <span className="text-blue-100/90 font-medium">Total Outflow</span>
               <span className="typo-num font-bold text-rose-300">-{formatCurrency(totalExpense)}</span>
             </div>
           </div>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
       {/* ========================================================================= */}
       {/* BENTO ROW 2: Key Financial Metric Cards                                  */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="Total Credit Inflow"
           tag="INCOME"

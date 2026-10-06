@@ -277,20 +277,25 @@ export const SettingsModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
       <div
-        className="w-full max-w-2xl rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden my-8"
+        className="w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col my-0 sm:my-8"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile Pull Handle Indicator */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1">
+          <div className="w-10 h-1 rounded-full bg-slate-300" />
+        </div>
+
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/70">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 bg-slate-50/80 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
               <Sheet className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 typo-label">Google Sheet Database Connection</h3>
-              <p className="text-xs text-slate-500 font-medium">Link Google Apps Script Web App Endpoint</p>
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 typo-label">Google Sheet DB Setup</h3>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Link Google Apps Script Endpoint</p>
             </div>
           </div>
           <button

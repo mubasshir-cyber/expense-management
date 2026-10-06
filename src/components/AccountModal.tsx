@@ -91,23 +91,28 @@ export const AccountModal = () => {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
       <div
-        className="w-full max-w-lg rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden transition-all"
+        className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden transition-all max-h-[92vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile Pull Handle Indicator */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1">
+          <div className="w-10 h-1 rounded-full bg-slate-300" />
+        </div>
+
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/70">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 bg-slate-50/80 shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-200">
-              <CreditCard className="w-5 h-5" />
+              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 typo-label">
-                {editingAccount ? 'Edit Payment Mode' : 'Create New Payment Mode'}
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 typo-label">
+                {editingAccount ? 'Edit Payment Mode' : 'New Payment Mode'}
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
-                {editingAccount ? 'Update channel details & balance' : 'Add a new bank, wallet, card, or cash pool'}
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
+                {editingAccount ? 'Update mode & balance' : 'Add Bank, UPI, Card, or Cash'}
               </p>
             </div>
           </div>
@@ -119,11 +124,11 @@ export const AccountModal = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 overflow-y-auto flex-1">
           {/* Payment Mode Type Selector */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 typo-label">
-              Payment Channel Type *
+            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 typo-label">
+              Channel Type *
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {accountTypes.map((item) => {
@@ -150,14 +155,14 @@ export const AccountModal = () => {
 
           {/* Mode Name */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 typo-label flex items-center gap-1.5">
+            <label className="block text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 typo-label flex items-center gap-1.5">
               <Tag className="w-3.5 h-3.5 text-blue-600" />
               <span>Payment Mode Name *</span>
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. SBI Savings Account, Paytm UPI, Amazon Pay"
+              placeholder="e.g. SBI Savings, GPay UPI, ICICI Credit Card"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
@@ -165,9 +170,9 @@ export const AccountModal = () => {
           </div>
 
           {/* Opening / Initial Balance & Identifier */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 typo-label">
+              <label className="block text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 typo-label">
                 Opening Balance (₹ INR)
               </label>
               <div className="relative">
@@ -176,6 +181,7 @@ export const AccountModal = () => {
                 </span>
                 <input
                   type="number"
+                  inputMode="decimal"
                   step="any"
                   placeholder="0.00"
                   value={initialBalance}
@@ -186,13 +192,13 @@ export const AccountModal = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 typo-label flex items-center gap-1.5">
+              <label className="block text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 typo-label flex items-center gap-1.5">
                 <Hash className="w-3.5 h-3.5 text-slate-400" />
                 <span>Masked No. / UPI ID</span>
               </label>
               <input
                 type="text"
-                placeholder="e.g. •••• 3821, upi@sbi"
+                placeholder="e.g. •••• 3821, user@upi"
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
@@ -205,14 +211,14 @@ export const AccountModal = () => {
             <button
               type="button"
               onClick={closeAccountModal}
-              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 transition-colors uppercase font-mono"
+              className="flex-1 sm:flex-initial px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 transition-colors uppercase font-mono text-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/25 transition-all active:scale-95 disabled:opacity-50 typo-label"
+              className="flex-1 sm:flex-initial px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/25 transition-all active:scale-95 disabled:opacity-50 typo-label text-center"
             >
               {isSubmitting
                 ? 'Saving...'
