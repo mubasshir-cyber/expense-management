@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Transaction, TransactionType } from '../types';
 import { formatCurrency, formatDate } from '../utils/constants';
 import { useExpense } from '../context/ExpenseContext';
@@ -13,7 +13,11 @@ import {
   Filter,
   ArrowUpDown,
   Calendar,
-  FileSpreadsheet
+  FileSpreadsheet,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight
 } from 'lucide-react';
 
 interface TransactionTableProps {
@@ -38,6 +42,15 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(limit || 10);
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, typeFilter, categoryFilter, accountFilter, sortBy, sortOrder, pageSize]);
+
   // Extract unique categories
   const availableCategories = useMemo(() => {
     const set = new Set<string>();
@@ -49,7 +62,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
     return Array.from(set).sort();
   }, [transactions, typeFilter]);
 
-  // Filter & sort transactions
+  // Filter & sort all matching transactions
   const filteredTransactions = useMemo(() => {
     let list = [...transactions];
 
@@ -86,12 +99,18 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
       }
     });
 
-    if (limit) {
-      return list.slice(0, limit);
-    }
-
     return list;
-  }, [transactions, typeFilter, categoryFilter, accountFilter, searchTerm, sortBy, sortOrder, limit]);
+  }, [transactions, typeFilter, categoryFilter, accountFilter, searchTerm, sortBy, sortOrder]);
+
+  // Total pages calculation
+  const totalEntries = filteredTransactions.length;
+  const totalPages = Math.max(1, Math.ceil(totalEntries / pageSize));
+
+  // Current paginated items
+  const paginatedTransactions = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredTransactions.slice(startIndex, startIndex + pageSize);
+  }, [filteredTransactions, currentPage, pageSize]);
 
   // Export to CSV
   const handleExportCSV = () => {
@@ -125,15 +144,18 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
     }
   };
 
+  const startIndex = (currentPage - 1) * pageSize + 1;
+  const endIndex = Math.min(currentPage * pageSize, totalEntries);
+
   return (
     <div className="bento-card overflow-hidden">
       {/* Table Header */}
-      <div className="p-6 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+      <div className="p-4 sm:p-6 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
         <div>
           <div className="flex items-center gap-2.5">
             <h3 className="typo-label text-sm text-slate-800">{title}</h3>
             <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-slate-200/80 text-slate-700 border border-slate-300">
-              {filteredTransactions.length} ENTRIES
+              {totalEntries} ENTRIES
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -142,14 +164,14 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
-          {filteredTransactions.length > 0 && (
+          {totalEntries > 0 && (
             <button
               onClick={handleExportCSV}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-xs font-mono font-bold text-slate-700 border border-slate-200 shadow-sm transition-colors uppercase"
               title="Export filtered records to CSV"
             >
               <Download className="w-3.5 h-3.5 text-slate-500" />
-              <span>Export CSV</span>
+              <span className="hidden sm:inline">Export CSV</span>
             </button>
           )}
 
@@ -231,7 +253,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
 
       {/* Content Area */}
       <div>
-        {filteredTransactions.length === 0 ? (
+        {totalEntries === 0 ? (
           <div className="py-12 sm:py-16 px-4 text-center">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
               <FileSpreadsheet className="w-6 h-6" />
@@ -253,7 +275,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
           <>
             {/* 1. Mobile Feed View (visible on < md screens) */}
             <div className="md:hidden divide-y divide-slate-100">
-              {filteredTransactions.map((t) => {
+              {paginatedTransactions.map((t) => {
                 const isExpense = t.type === 'Expense';
                 return (
                   <div
@@ -357,7 +379,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs font-medium">
-                  {filteredTransactions.map((t) => {
+                  {paginatedTransactions.map((t) => {
                     const isExpense = t.type === 'Expense';
                     return (
                       <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
@@ -423,6 +445,115 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                   })}
                 </tbody>
               </table>
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="p-3 sm:p-4 border-t border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-center justify-between gap-3">
+              {/* Entries count and Page Size Selector */}
+              <div className="flex items-center gap-3 text-xs text-slate-600 font-medium">
+                <span>
+                  Showing <strong className="text-slate-900 font-mono">{totalEntries > 0 ? startIndex : 0}</strong> to{' '}
+                  <strong className="text-slate-900 font-mono">{endIndex}</strong> of{' '}
+                  <strong className="text-slate-900 font-mono">{totalEntries}</strong>
+                </span>
+
+                <div className="flex items-center gap-1.5 text-slate-500">
+                  <span className="hidden sm:inline">|</span>
+                  <span>Per page:</span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => setPageSize(Number(e.target.value))}
+                    className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono"
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Page Number Buttons */}
+              <div className="flex items-center gap-1">
+                {/* First Page */}
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  title="First Page"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
+
+                {/* Prev Page */}
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  title="Previous Page"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                {/* Page Number Chips */}
+                <div className="flex items-center gap-1 px-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((page) => {
+                      // Show first, last, and pages around current page
+                      return (
+                        page === 1 ||
+                        page === totalPages ||
+                        Math.abs(page - currentPage) <= 1
+                      );
+                    })
+                    .map((page, idx, arr) => {
+                      const prev = arr[idx - 1];
+                      const showEllipsis = prev && page - prev > 1;
+                      const isCurrent = page === currentPage;
+
+                      return (
+                        <React.Fragment key={page}>
+                          {showEllipsis && <span className="px-1 text-slate-400 text-xs font-mono">...</span>}
+                          <button
+                            type="button"
+                            onClick={() => setCurrentPage(page)}
+                            className={`w-8 h-8 rounded-lg text-xs font-mono font-bold transition-all ${
+                              isCurrent
+                                ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/30'
+                                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        </React.Fragment>
+                      );
+                    })}
+                </div>
+
+                {/* Next Page */}
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  title="Next Page"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Last Page */}
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  title="Last Page"
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </>
         )}
